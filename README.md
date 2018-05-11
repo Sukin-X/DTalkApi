@@ -1,37 +1,72 @@
-# DTalkApi
+DTalkApi 说明
 
-#### 项目介绍
-钉钉开发的一些自用封装接口
+### 一. login相关
+#### 1.获取accessToken  
+	* 参数: `corpID`,`corpSecert`
+	* 使用: `AuthHelper.getAccessToken(CORP_ID, CORP_SECRET);`
+	* 结果: 相应的accessToken值
 
-#### 软件架构
-软件架构说明
+#### 2.获取jsapi中的ticket
+	* 参数: `accessToken` 
+	* 使用: `AuthHelper.getJsapiTicket(accessToken);`
+	* 结果: 相应的ticket值
+
+#### 3.获取jsapi中初始化dd.config所需要的sign签名
+	* 参数: `ticket`[^1], `nonceStr`[^2], `timeStamp`[^3], `url`[^4]
+	* 使用: `AuthHelper.sign(ticket, nonceStr, timeStamp, url);`
+	* 结果: 一个签名后的字符串
+
+---
+
+#### 4.获取用户基本信息,如userid
+	* 参数: `code`[^5] , `accessToken`
+	* 使用: `AuthHelper.getUser(code, accessToken);`
+	* 结果: 一个json格式的字符串,里面包含了相关的用户基本信息
+
+#### 5.获取用户详细信息(ISV版本)
+	* 参数: `userid` , `accessToken`
+	* 使用: `AuthHelper.getUser(userid, accessToken);`
+	* 结果: 一个json格式的字符串,里面包含了相关的用户基本信息
 
 
-#### 安装教程
-
-1. xxxx
-2. xxxx
-3. xxxx
-
-#### 使用说明
-
-1. xxxx
-2. xxxx
-3. xxxx
-
-#### 参与贡献
-
-1. Fork 本项目
-2. 新建 Feat_xxx 分支
-3. 提交代码
-4. 新建 Pull Request
 
 
-#### 码云特技
+UseDemo.java
+````
+package cn.jlhd;
+import cn.jlhd.dtalk.login.AuthHelper;
+import cn.jlhd.util.RandomStringUtil;
 
-1. 使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2. 码云官方博客 [blog.gitee.com](https://blog.gitee.com)
-3. 你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解码云上的优秀开源项目
-4. [GVP](https://gitee.com/gvp) 全称是码云最有价值开源项目，是码云综合评定出的优秀开源项目
-5. 码云官方提供的使用手册 [http://git.mydoc.io/](http://git.mydoc.io/)
-6. 码云封面人物是一档用来展示码云会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+public class UseDemo {
+	//请填入相应信息
+	static String AGENT_ID = "agent_id";
+	static String CORP_ID = "corp_id";
+	static String CORP_SECRET = "corp_secret";
+	public static void main(String[] args) {
+		//1.获取AccessToken
+		String accessToken = AuthHelper.getAccessToken(CORP_ID, CORP_SECRET);
+		//2.获取jsapi的鉴权ticket
+		String ticket = AuthHelper.getJsapiTicket(accessToken);
+		//3.获取前段JS的config初始化时所需要的sign签名
+		String nonceStr = RandomStringUtil.getCode(10, 6);
+		long timeStamp = System.currentTimeMillis();
+		String url = "需要初始化dd.config的前端页面url";
+		String sign = AuthHelper.sign(ticket, nonceStr, timeStamp, url);
+		//4.获取用户信息
+		String code = "你的js页所传来的临时授权code";
+		AuthHelper.getUserInfo(code, accessToken);
+		//5.获取用户详细信息
+		String userid = "用户的USERID";
+		AuthHelper.getUser(userid, accessToken);
+	}
+}
+
+````
+---
+
+
+[^1]:  `ticket` 是上面所生成的tickect  
+[^2]:  `nonceStr` 为随机生成的字符串  
+[^3]:  `timeStamp` 时间戳  
+[^4]:  **`url`** 这个url,是前端页面需要进行dd.config初始化权限的那个url  
+[^5]:  这里的code是前端页面调用jssdk所传入后台的一个code
