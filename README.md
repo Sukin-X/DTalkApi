@@ -1,32 +1,35 @@
-DTalkApi 说明
+DTalkApi 说明  
+> 可以引入maven项目自行增加开发使用  
+> 也可以打成jar包引用  
+> 也可以宝贝类进项目用
 
 ### 一. login相关
 #### 1.获取accessToken  
-	* 参数: `corpID`,`corpSecert`
-	* 使用: `AuthHelper.getAccessToken(CORP_ID, CORP_SECRET);`
-	* 结果: 相应的accessToken值
+	 参数: `corpID`,`corpSecert`
+	 使用: `AuthHelper.getAccessToken(CORP_ID, CORP_SECRET);`
+	 结果: 相应的accessToken值
 
 #### 2.获取jsapi中的ticket
-	* 参数: `accessToken` 
-	* 使用: `AuthHelper.getJsapiTicket(accessToken);`
-	* 结果: 相应的ticket值
+	 参数: `accessToken` 
+	 使用: `AuthHelper.getJsapiTicket(accessToken);`
+	 结果: 相应的ticket值
 
 #### 3.获取jsapi中初始化dd.config所需要的sign签名
-	* 参数: `ticket`[^1], `nonceStr`[^2], `timeStamp`[^3], `url`[^4]
-	* 使用: `AuthHelper.sign(ticket, nonceStr, timeStamp, url);`
-	* 结果: 一个签名后的字符串
+	 参数: `ticket`[^1], `nonceStr`[^2], `timeStamp`[^3], `url`[^4]
+	 使用: `AuthHelper.sign(ticket, nonceStr, timeStamp, url);`
+	 结果: 一个签名后的字符串
 
 ---
 
 #### 4.获取用户基本信息,如userid
-	* 参数: `code`[^5] , `accessToken`
-	* 使用: `AuthHelper.getUser(code, accessToken);`
-	* 结果: 一个json格式的字符串,里面包含了相关的用户基本信息
+	 参数: `code`[^5] , `accessToken`
+	 使用: `AuthHelper.getUser(code, accessToken);`
+	 结果: 一个json格式的字符串,里面包含了相关的用户基本信息
 
 #### 5.获取用户详细信息(ISV版本)
-	* 参数: `userid` , `accessToken`
-	* 使用: `AuthHelper.getUser(userid, accessToken);`
-	* 结果: 一个json格式的字符串,里面包含了相关的用户基本信息
+	 参数: `userid` , `accessToken`
+	 使用: `AuthHelper.getUser(userid, accessToken);`
+	 结果: 一个json格式的字符串,里面包含了相关的用户基本信息
 
 
 
